@@ -805,8 +805,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   micInput: {fileID: 176729493}
-  gridSize: {x: 10, y: 10}
-  cellSize: 1
+  gridSize: {x: 20, y: 20}
+  cellSize: 0.5
   origin: {x: 0, y: 0}
 --- !u!1 &177642786
 GameObject:
@@ -1421,7 +1421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheel1: {fileID: 566877039}
   wheel2: {fileID: 727921453}
-  mode: 1
+  mode: 0
   maxLinearSpeed: 0.22
   maxRotationalSpeed: 2.84
   wheelRadius: 0.033
@@ -2108,10 +2108,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 258962987736693398, guid: 773c5744427ec21e5ad9104255dc6c0b, type: 3}
-  fileName: noise_data.csv
+  fileName: MicGrid.csv
   cellSize: 0.5
-  minValue: 30
-  maxValue: 100
+  minValue: -100
+  maxValue: -10
   refreshInterval: 1
 --- !u!1 &989082035
 GameObject:

@@ -6,7 +6,7 @@ public class NoiseVisualizer : MonoBehaviour
 {
     [Header("Prefab & Data")]
     public GameObject tilePrefab;
-    public string fileName = "noise_data.csv";
+    public string fileName = "MicGrid.csv";
     public float cellSize = 1.0f;
 
     [Header("Value Range & Refresh")]
@@ -34,7 +34,7 @@ public class NoiseVisualizer : MonoBehaviour
     // Load data and draw initial heatmap
     void LoadAndDraw()
     {
-        string path = Path.Combine(Application.dataPath, "Data", fileName);
+        string path = Path.Combine(Application.dataPath, fileName);
         if (!File.Exists(path))
         {
             Debug.LogError($"Noise data file not found at {path}");
