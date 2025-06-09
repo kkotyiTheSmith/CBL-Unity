@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2035,7 +2035,7 @@ MonoBehaviour:
   fileName: MicGrid.csv
   cellSize: 0.5
   minValue: -100
-  maxValue: -10
+  maxValue: 10
   refreshInterval: 1
 --- !u!1 &989082035
 GameObject:
