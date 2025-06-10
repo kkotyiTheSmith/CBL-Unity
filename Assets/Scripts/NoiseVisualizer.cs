@@ -6,7 +6,7 @@ public class NoiseVisualizer : MonoBehaviour
 {
     [Header("Prefab & Data")]
     public GameObject tilePrefab;
-    public string fileName = "noise_data.csv";
+    public string fileName = "MicGrid.csv";
     public float cellSize = 1.0f;
 
     [Header("Value Range & Refresh")]
@@ -34,7 +34,7 @@ public class NoiseVisualizer : MonoBehaviour
     // Load data and draw initial heatmap
     void LoadAndDraw()
     {
-        string path = Path.Combine(Application.dataPath, "Data", fileName);
+        string path = Path.Combine(Application.dataPath, fileName);
         if (!File.Exists(path))
         {
             Debug.LogError($"Noise data file not found at {path}");
@@ -70,7 +70,7 @@ public class NoiseVisualizer : MonoBehaviour
                 if (float.TryParse(values[x].Trim(), out float noiseVal))
                 {
                     float planeY = transform.position.y; 
-                    Vector3 pos = new Vector3(x * cellSize - offsetX, planeY + 0.0001f, z * cellSize - offsetZ);
+                    Vector3 pos = new Vector3(x * cellSize - offsetX, planeY + 0.0001f, (lines.Length - z - 1) * cellSize - offsetZ);
                     GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
                     tile.transform.localScale = new Vector3(cellSize, 0.1f, cellSize);
                     Color col = GetColorForValue(noiseVal, minValue, maxValue);
