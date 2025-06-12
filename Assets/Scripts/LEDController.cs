@@ -1,51 +1,66 @@
 using UnityEngine;
 
-public class LEDController : MonoBehaviour {
+public class LEDController : MonoBehaviour
+{
     private const float ON_DURATION = 5f;
     // Adjust this threshold based on microphone sensitivity
-    private const float THRESHOLD = 0f;
+    private const float THRESHOLD = -100f;
 
     [SerializeField] private Light led;
 
-    // I don't know where this needs to be initialized
     public MicInput micInput;
     private float timer = 0f;
     private bool isOn = false;
     
-    void Start() {
+    void Start()
+    {
+        Debug.Log("Start()");
         led.enabled = false;
     }
     
-    void Update() {
-        if (isOn) {
+    void Update()
+    {
+        Debug.Log("Update()");
+        if (isOn)
+        {
             timer -= Time.deltaTime;
-            if (timer <= 0f) {
+            if (timer <= 0f)
+            {
                 TurnOff();
                 return;
             }
         }
 
         float dB = micInput.GetDecibels();
-        Debug.Log(dB + " " + THRESHOLD);
-        if (dB > THRESHOLD) {
+        if (dB > THRESHOLD)
+        {
+            Debug.Log(dB + " > " + THRESHOLD);
             TurnOn();
+        } else {
+            Debug.Log(dB + " <= " + THRESHOLD);
         }
     }
 
-    private void TurnOn() {
-        Debug.Log("Turned on");
+    private void TurnOn()
+    {
+        Debug.Log("Turning light on...");
         isOn = true;
         timer = ON_DURATION;
-        if (led != null) {
-            Debug.Log("Setting active");
+        if (led != null)
+        {
+            Debug.Log("Turned light on.");
             led.enabled = true;
         }
     }
 
-    private void TurnOff() {
+    private void TurnOff()
+    {
+        Debug.Log("Turning light off...");
         isOn = false;
         timer = 0f;
-        if (led != null) {
+        if (led != null)
+        {
+            Debug.Log("Turned light off.");
             led.enabled = false;
         }
     }
