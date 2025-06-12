@@ -4,7 +4,7 @@ public class LEDController : MonoBehaviour
 {
     private const float ON_DURATION = 5f;
     // Adjust this threshold based on microphone sensitivity
-    private const float THRESHOLD = -100f;
+    private const float THRESHOLD = 0f;
 
     [SerializeField] private Light led;
 
