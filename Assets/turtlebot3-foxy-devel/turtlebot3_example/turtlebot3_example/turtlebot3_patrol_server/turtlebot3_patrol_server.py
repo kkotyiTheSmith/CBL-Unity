@@ -88,7 +88,7 @@ class Turtlebot3PatrolServer(Node):
         speed = 0.5  # unit: m/s
 
         feedback_msg = Patrol.Feedback()
-        total_driving_time = 2 * math.pi * radius / speed
+        total_driving_time = 20
         feedback_msg.left_time = total_driving_time
         last_time = self.get_clock().now()
 
@@ -110,7 +110,17 @@ class Turtlebot3PatrolServer(Node):
 
             # Give vel_cmd to Turtlebot3
             twist = Twist()
-            twist = Turtlebot3Path.drive_circle(radius, speed)
+            # twist = Turtlebot3Path.drive_circle(radius, speed)
+            if feedback_msg.left_time < 5
+            	twist = Turtlebot3Path.drive_straight(speed)
+            elif feedback_msg.left_time < 8
+            	twist = Turtlebot3Path.turn(speed)
+            elif feedback_msg.left_time < 15
+            	twist = Turtlebot3Path.drive_straight(speed)
+            elif feedback_msg.left_time < 17
+            	twist = Turtlebot3Path.turn(speed)
+            else 
+            	twist = Turtlebot3Path.drive_straight(speed)
             self.cmd_vel_pub.publish(twist)
 
             # Process rate

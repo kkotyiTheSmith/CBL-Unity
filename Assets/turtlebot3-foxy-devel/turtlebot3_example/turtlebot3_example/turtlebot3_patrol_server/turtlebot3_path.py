@@ -30,3 +30,19 @@ class Turtlebot3Path():
         twist.angular.z = angular_velocity
 
         return twist
+        
+    def drive_straight(velocity):
+    	twist = Twist()
+    	linear_velocity = velocity
+    	angular_velocity = 0
+    	
+    	twist.linear.x = linear_velocity
+    	twist.angular.z = angular_velocity
+    	
+    def turn():
+    	twist = Twist(velocity)
+    	linear_velocity = 0
+    	angular_velocity = velocity
+    	
+    	twist.linear.x = linear_velocity
+    	twist.angular.z = angular_velocity
