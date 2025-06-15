@@ -33,6 +33,8 @@ namespace RosSharp.Control
         private RotationDirection direction;
         private float rosLinear = 0f;
         private float rosAngular = 0f;
+        private float wheel1Position = 0f;
+        private float wheel2Position = 0f;
 
         void Start()
         {
@@ -46,28 +48,8 @@ namespace RosSharp.Control
 
         void ReceiveROSCmd(TwistMsg cmdVel)
         {
-            if (cmdVel.linear.x==0 && cmdVel.angular.z==0)
-            {
-                rosLinear =0;
-                rosAngular=0;
-            }
-
-            else if (cmdVel.linear.x<0)
-            {
-                rosLinear = (float)((float)cmdVel.linear.x-0.02);
-            } 
-            else if (cmdVel.angular.z<0)
-            { 
-                rosAngular =  (float)((float)cmdVel.angular.z-0.18);
-            }
-            else if (cmdVel.linear.x>0)
-            {
-                rosLinear = (float)((float)cmdVel.linear.x+0.02); //(float)cmdVel.linear.x ;//added 0.05 to account for friction 
-            }
-            else if (cmdVel.angular.z>0)
-            {
-                 rosAngular = (float)((float)cmdVel.angular.z+0.18); //(float)cmdVel.angular.z; //added 0.03 to acct for friction
-            }
+            rosLinear = (float)cmdVel.linear.x;
+            rosAngular = (float)cmdVel.angular.z;
             lastCmdReceived = Time.time;
         }
 
@@ -88,7 +70,11 @@ namespace RosSharp.Control
             ArticulationDrive drive = joint.xDrive;
             drive.forceLimit = forceLimit;
             drive.damping = damping;
+            drive.stiffness = 10000f; // High stiffness for position control
+            drive.lowerLimit = float.NegativeInfinity;
+            drive.upperLimit = float.PositiveInfinity;
             joint.xDrive = drive;
+            joint.jointType = ArticulationJointType.RevoluteJoint;
         }
 
         private void SetSpeed(ArticulationBody joint, float wheelSpeed = float.NaN)
@@ -102,6 +88,13 @@ namespace RosSharp.Control
             {
                 drive.targetVelocity = wheelSpeed;
             }
+            joint.xDrive = drive;
+        }
+
+        private void SetPosition(ArticulationBody joint, float targetPosition)
+        {
+            ArticulationDrive drive = joint.xDrive;
+            drive.target = targetPosition;
             joint.xDrive = drive;
         }
 
@@ -154,31 +147,24 @@ namespace RosSharp.Control
             RobotInput(rosLinear, -rosAngular);
         }
 
-        private void RobotInput(float speed, float rotSpeed) // m/s and rad/s
+        private void RobotInput(float speed, float rotSpeed)
         {
-            if (speed > maxLinearSpeed)
-            {
-                speed = maxLinearSpeed;
-            }
-            if (rotSpeed > maxRotationalSpeed)
-            {
-                rotSpeed = maxRotationalSpeed;
-            }
-            float wheel1Rotation = (speed / wheelRadius);
-            float wheel2Rotation = wheel1Rotation;
-            float wheelSpeedDiff = ((rotSpeed * trackWidth) / wheelRadius);
-            if (rotSpeed != 0)
-            {
-                wheel1Rotation = (wheel1Rotation + (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-                wheel2Rotation = (wheel2Rotation - (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-            }
-            else
-            {
-                wheel1Rotation *= Mathf.Rad2Deg;
-                wheel2Rotation *= Mathf.Rad2Deg;
-            }
-            SetSpeed(wA1, wheel1Rotation);
-            SetSpeed(wA2, wheel2Rotation);
+            // Clamp speeds
+            speed = Mathf.Clamp(speed, -maxLinearSpeed, maxLinearSpeed);
+            rotSpeed = Mathf.Clamp(rotSpeed, -maxRotationalSpeed, maxRotationalSpeed);
+
+            // Calculate wheel angular velocities (rad/s)
+            float wheel1Vel = (speed / wheelRadius) + (rotSpeed * trackWidth / (2 * wheelRadius));
+            float wheel2Vel = (speed / wheelRadius) - (rotSpeed * trackWidth / (2 * wheelRadius));
+
+            // Integrate to get new positions
+            wheel1Position += wheel1Vel * Time.fixedDeltaTime;
+            wheel2Position += wheel2Vel * Time.fixedDeltaTime;
+
+            // Convert to degrees for ArticulationBody
+            SetPosition(wA1, wheel1Position * Mathf.Rad2Deg);
+            SetPosition(wA2, wheel2Position * Mathf.Rad2Deg);
         }
     }
 }
+
