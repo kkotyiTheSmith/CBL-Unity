@@ -73,8 +73,11 @@ public class NoiseVisualizer : MonoBehaviour
                     Vector3 pos = new Vector3(x * cellSize - offsetX, planeY + 0.0001f, (lines.Length - z - 1) * cellSize - offsetZ);
                     GameObject tile = Instantiate(tilePrefab, pos, Quaternion.identity, transform);
                     tile.transform.localScale = new Vector3(cellSize, 0.1f, cellSize);
-                    Color col = GetColorForValue(noiseVal, minValue, maxValue);
-                    tile.GetComponent<Renderer>().material.color = col;
+                    if (noiseVal != 0f)
+			{
+    			    Color col = GetColorForValue(noiseVal, minValue, maxValue);
+    			    tile.GetComponent<Renderer>().material.color = col;
+			}
                 }
             }
         }
